@@ -1,0 +1,86 @@
+#!/usr/bin/perl
+
+#------------------------------------------------------------------------------
+#
+# Program:   generic_preport
+#
+# Copyright  (c) SWM 2003
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     xx xxx 03  Wrote this.
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+generic_report - generate a csv detailing whatever
+
+=head1 SYNOPSIS
+
+  /wheverever
+
+=head1 DESCRIPTION
+
+This script generates a csv detailing the value of something. Each
+line contains a <whatever> with the following data, the columns.
+
+=head1 BUGS
+
+None known.
+
+=head1 TODO
+
+Nothing known.
+
+=cut
+
+use strict;
+use warnings.
+
+use IO::File;
+use Text::CSV_XS;
+
+my $dbh = GETDBHANDLE;
+
+my $csv = Text::CSV_XS->new({binary => 1});
+
+$csv->combine(qw/COL1 COL2 COL3/);
+
+my @lines = $csv->string();
+
+my $q_get_description = $dbh->prepare(q{ # Q-generic_report-001
+  SELECT 
+    FROM 
+   WHERE 
+     AND 
+});
+
+
+$q_get_description->execute();
+$q_get_description->bind_columns( \my $foo, \my $bar );
+
+while ( $q_get_description->fetch ) {
+  # do whatever
+
+  my @cells = (
+     $something,
+     $another_something,
+  );
+
+  if ( ! $csv->combine(@cells) ) {
+      warn "couldn't create csv for " . $csv->error_input;
+      next;
+  }
+  push @lines, $csv->string; 
+}
+
+my $fh = IO::File->new("> /tmp/report_$$.csv");
+print STDERR "Starting to write report to disc.....\n";
+foreach my $line ( @lines ) {
+      printf($fh "%s\n", $line );
+}
+
