@@ -1,0 +1,85 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     21 May 03  Wrote this
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+build_table - builds a table to be used on any database on gandalf.  
+
+=head1 SYNOPSIS
+
+ /usr/local/bin/build_table --database=swmcc --table=contact_history
+
+=head1 DESCRIPTION
+
+At the minute there is no real easy way of transfering table to the webserver.
+Sometimes I forget to it, and sometimes the table requires information already
+in the table to work properly. With tests and stuff I can't do a simple
+mysqldump, so I have to remember what enteries are tests and what enteries
+are valid. Very very annoying.
+
+This script will allow me to create a standard way of creating and maintaing
+tables. It isn't perfect, but it is a start.
+
+=head1 BUGS
+
+None Known.
+
+=head1 TODO
+
+=over 4
+
+=item * Make it update the database automatically without me having to know. 
+
+=back
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use Date::Simple;
+use Getopt::Long; 
+use Template;
+
+my $usage = qq{
+  [build_table]
+
+  --databaase = the database that the table is going to belong to. 
+  --table     = the name of the table. 
+
+  i.e. build_table --database=swmcc --table=contact_history
+};
+
+my ($database, $table);
+GetOptions ('database=s' => \$database, 'table=s' => \$table);
+
+die $usage . 'need a database' unless ( defined $database ); 
+die $usage . 'need a table'    unless ( defined $table    ); 
+
+my $vars = {
+        database => $database,
+        table    => $table,
+        date     => Date::Simple->new, 
+};
+
+
+my $t = Template->new(
+      INCLUDE_PATH => '/var/templates/scripts/stub_templates/',
+);
+
+my $script = $database . "." . $table;
+$t->process('database_table', $vars, $script);
+system("vim $script");
+

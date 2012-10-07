@@ -1,0 +1,85 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     25 Apr 03  Amended Usage.
+# SWM     15 Apr 03  Took away the crappy print from the $t->process call.
+#                     Added an extra paramter to the process call to save the
+#                     output to a file. Added a system call to edit the file. 
+# SWM     28 Feb 03  Changed the INCLUDE_PATH to be stub_templates instead
+#                     of swmcc.
+# SWM     04 Feb 03  Wrote this. 
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+build_script - builds the script stubs. 
+
+=head1 SYNOPSIS
+
+ /usr/local/bin/build_script --pathname=$path --script=$script 
+
+=head1 DESCRIPTION
+
+This creates the scripts stubs at the top of all the scripts that I have.
+
+=head1 BUGS
+
+None Known.
+
+=head1 TODO
+
+=over 4 
+
+=item * make the copyright an option.
+
+=back
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use Getopt::Long;
+use Template;
+use Date::Simple;
+
+
+my $usage = qq{
+  [build_script]
+
+  --namespace - the namespace of the module you are testing
+  --package   = the name of the package you are testing
+
+  i.e. build_script --pathname=/usr/local/bin --script=ipconfig 
+
+};
+
+my $pathname; 
+my $script;   
+GetOptions ('pathname=s' => \$pathname, 'script=s' => \$script);
+
+die $usage . 'need a pathname' unless ( defined $pathname ); 
+die $usage . 'need a script'   unless ( defined $script   ); 
+
+my $vars = {
+        script    => $script,
+        pathname  => $pathname,
+        date      => Date::Simple->new, 
+};
+
+
+my $t = Template->new(
+      INCLUDE_PATH => '/var/templates/scripts/stub_templates/',
+);
+
+$t->process('shellscript', $vars, $script);
+system("vim $script");

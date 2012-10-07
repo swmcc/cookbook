@@ -1,0 +1,82 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003 - 2004
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     06 Apr 04  Now uses SWM::SyncSite and not MyMods. 
+# SWM     02 Mar 03  Wrote this
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+add_site - add a site to the sync_site database. 
+
+=head1 SYNOPSIS
+
+ /usr/local/bin/add_site
+
+=head1 DESCRIPTION
+
+This script adds a site instance to the sync_site database 
+(see perldoc /usr/local/bin/sync_site).
+
+You can add a new site or you can add to an existing one. You need to
+know the following:
+
+=over 4
+
+=item * site_name e.g. swmcc 
+
+=item * label e.g. test directories
+
+=item * directory e.g. /var/tests/site_perl/SWM/
+
+=back
+
+=head1 BUGS
+
+None Known.
+
+=head1 TODO
+
+=over 4
+
+=item * Validate directory
+
+=back
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use SWM::SyncSite;
+use SWM::SyncSite::Log;
+
+system("clear");
+print 'Please Enter the Site Name ==> ';
+chomp( my $site_name = <STDIN> );
+die 'need a site_name' if $site_name eq '';
+
+print 'Please Enter the Label for this instance ==> ';
+chomp( my $label = <STDIN> );
+die 'need a site_name' if $label eq '';
+
+print 'Please Enter the directory for this instance ==> ';
+chomp( my $directory = <STDIN> );
+die 'need a site_name' if $directory eq '';
+
+SWM::SyncSite->create(
+    {
+        site_name => $site_name,
+        label     => $label,
+        directory => $directory,
+    }
+);

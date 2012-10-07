@@ -1,0 +1,99 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003 - 2004
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     02 Mar 03  Took away warn $type in the script. 
+# SWM     10 Apr 03  Now takes an extra argument '--type' so I can easily
+#                      add extra templates depending on the type of module.
+#                      You also don't have to pipe to a file and took away
+#                      the print away from the $t->process. Added a
+#                      system call to open up the module.  
+# SWM     28 Feb 03  Changed the INCLUDE_PATH to be stub_templates instead
+#                     of swmcc.
+# SWM     04 Feb 03  Wrote this
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+build_module - builds the stub for my modules. 
+
+=head1 SYNOPSIS
+
+  /usr/local/bin/build_module (see usage for options) 
+
+=head1 DESCRIPTION
+
+This creates the stubs at the top of all the module that I have.
+
+=head1 BUGS
+
+None Known.
+
+=head1 TODO
+
+=over4 
+
+=item * make the copyright year an option
+
+=item * the usage should be an external file  
+
+=back
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use Getopt::Long;
+use Template;
+use Date::Simple;
+
+my $usage = qq{
+  [build_module]
+
+  --namespace = the namespace of the module you are creating 
+  --package   = the name of the package you are creating 
+  --type      = the type of module:
+
+                CDB = Class::DBI
+                CA  = Class::Accessor
+                TT  = Template::Toolkit
+  
+  i.e. build_module --namespace=SWM --package=Session --type=CDB 
+
+};
+
+my $namespace;
+my $package;
+my $type;
+GetOptions(
+    'namespace=s' => \$namespace,
+    'package=s'   => \$package,
+    'type=s'      => \$type
+);
+
+die $usage . 'need a namespace' unless ( defined $namespace );
+die $usage . 'need a package'   unless ( defined $package );
+
+my $vars = {
+    date      => Date::Simple->new,
+    module    => $package,
+    namespace => $namespace,
+    type      => $type,
+};
+
+
+my $t = Template->new(
+    INCLUDE_PATH => '/var/templates/scripts/stub_templates/',
+);
+
+$t->process( 'module', $vars, $package . ".pm" );
+system("vim $package.pm"); 

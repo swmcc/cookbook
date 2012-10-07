@@ -1,0 +1,93 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003 - 2004
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     31 May 04  BUGFIX: the system("vim.. line no longer points to the
+#                      .cgi file. 
+# SWM     06 Apr 04  No longer appends .cgi to the file.
+# SWM     15 Apr 03  Took away the print statement from the $t->process call.
+#                     Added an extra parameter to the process call to save
+#                     the contents of process to a file. Added a system call
+#                     to automatically edit the file.   
+# SWM     28 Feb 03  Changed the INCLUDE_PATH to be stub_templates instead
+#                     of swmcc.
+# SWM     21 Feb 03  Added a 'base' parameter. So I can use this for
+#                     other sites instead of SWM (i.e. TVListings).   
+# SWM     04 Feb 03  Wrote this
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+build_webscript - builds the stubs for web scripts.   
+
+=head1 SYNOPSIS
+
+ /usr/local/bin/build_webscript --pathname=$path --script=$script
+
+=head1 DESCRIPTION
+
+This script builds all the stubs for my web scripts.
+
+=head1 BUGS
+
+Nothing Known.
+
+=head1 TODO
+
+=over 4
+
+=item * make the copyright an option.
+=item * make it completly database based, so I don't have to edit the 
+code everytime I come to adding a new site.  
+
+=break
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use Getopt::Long;
+use Template;
+use Date::Simple;
+my $usage = qq{
+[build_webscript]
+
+  --pathname = the path of the script you are creating 
+  --script   = the name of the script you are creating 
+  --base     = the name of the base you are creating.
+  
+  i.e. build_webscript --pathname=/bilbo --script=contact --base=SWMcc
+
+};
+
+my ($pathname, $script, $base);
+GetOptions( 'pathname=s' => \$pathname, 
+            'script=s'   => \$script, 
+            'base=s'     => \$base );
+
+die $usage . 'need a pathname' unless ( defined $pathname );
+die $usage . 'need a script'   unless ( defined $script );
+$base = "SWM" unless ( defined $base );
+
+my $vars = {
+    script   => $script,
+    pathname => $pathname,
+    base     => $base,
+    date     => Date::Simple->new,
+};
+
+my $t = Template->new(
+    INCLUDE_PATH => '/var/templates/scripts/stub_templates/',
+);
+
+$t->process( 'webscript', $vars, "$script" );
+system("vim $script");

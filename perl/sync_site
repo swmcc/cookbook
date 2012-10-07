@@ -1,0 +1,143 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003 - 2004 
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     22 Dec 04  Now restarts apache if modules are being synced. As
+#                      from now on I have RSA Auth.. on this laptop.
+# SWM     02 Dec 04  This script cannot sync the 'database' type. 
+# SWM     14 Apr 04  Added an except parameter. 
+# SWM     08 Apr 04  Now asks for an explanation as to why we are syncing.
+#                      Records the information in SWM::SyncSite::Log. 
+# SWM     06 Apr 04  Now uses SWM::SyncSite instead of SWM. 
+# SWM     15 Dec 03  $server now defaults to gandalf. Added some exclude rules.
+# SWM     21 Mar 03  Added a -type option so that it syncs templates and
+#                     scripts without looking at the module. 
+# SWM     06 Mar 03  Added an -all option so that it syncs all the active
+#                     sites.  
+# SWM     03 Mar 03  Made this script database driven instead of using a 
+#                     crappy set of hashes.    
+# SWM     27 Geb 03  Added the shell scripts directory to the tvlists %dir. 
+# SWM     21 Feb 03  Added the tvlistings site to the valid list of sites
+#                     this script can sync to.
+# SWM     21 Feb 03  This script now takes a --site argument so that I 
+#                      easily sync other sites. 
+# SWM     16 Feb 03  This script now takes a --server argument so that
+#                      it can sink to multiple servers. 
+# SWM     14 Feb 03  Added --exclude parameter to the web pages for swm.cc
+# SWM     13 Feb 03  Wrote this
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+sync_sites - sync the websites from the local machine to gandalf. 
+
+=head1 SYNOPSIS
+
+ /usr/local/bin/sync_site --server=$server --site=$site
+
+=head1 DESCRIPTION
+
+This script will sync any sites that live on the local machine to gandalf.
+It will automatically restart apache when syncing modules. You can't force
+it to restart-apache. 
+
+=head1 BUGS
+
+None Known.
+
+=head1 TODO
+
+=over4
+
+=item * Add the exlcude rules to the database. 
+
+=break
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use Getopt::Long;
+use SWM::SyncSite;
+use SWM::SyncSite::Log;
+
+my ( $server, $site, $type, $except );
+GetOptions(
+    'server=s' => \$server,
+    'site=s'   => \$site,
+    'type=s'   => \$type,
+    'except=s' => \$except,
+);
+
+$server = 'gandalf' if not defined $server;
+die "--site   argument missing" unless ( defined $site );
+
+my @sync_objs;
+
+if ( $site eq "all" ) {
+    @sync_objs = SWM::SyncSite->all_sites;
+}
+elsif ( defined $type ) {
+    @sync_objs = SWM::SyncSite->for_site_and_type( $site, $type );
+}
+elsif ( defined $except ) {
+    my @objs = SWM::SyncSite->for_sitename($site);
+    foreach my $sy (@objs) {
+        push @sync_objs, $sy if $sy->label ne $except;
+    }
+}
+else {
+    @sync_objs = SWM::SyncSite->for_sitename($site);
+}
+
+die "Erk :( Nothing to sync" unless ( scalar @sync_objs > 0 );
+
+print "Please Enter An Explanation ==>\n";
+chomp( my $explanation = <STDIN> );
+die 'need an explanation ' if $explanation eq '';
+
+my $restart_apache = 0;
+my %labels;
+foreach my $sync (@sync_objs) {
+
+    # We don't want to sync databases up, to do so would be awful.
+    # If we find that we are adding another exception (for labels)
+    # we should add a method to exclude certain ones.
+    my $label     = $sync->label;
+    next if $label eq 'database';
+    
+    $restart_apache++ if $label eq 'modules';
+   
+    my $directory = $sync->directory;
+    print "syncing.... $label  [ $directory ]\n";
+
+    $labels{$label} = 1;
+    my $exclude = "--exclude=images/stars --exclude=logs --exclude=feeds";
+
+    system("rsync -avz $exclude $directory/* $server:/$directory/");
+}
+
+if ( $restart_apache ) {
+  system("ssh swmcc.com '/usr/local/bin/restart-apache'"); 
+}
+
+my @sorted_labels = sort { $labels{$a} cmp $labels{$b} } keys %labels;
+my $types .= join " ", map $_, @sorted_labels;
+
+SWM::SyncSite::Log->create(
+    {
+        site        => $site,
+        type        => $types,
+        explanation => $explanation,
+
+    }
+);

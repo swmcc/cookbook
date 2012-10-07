@@ -1,0 +1,83 @@
+#!/usr/bin/perl 
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) SWM  2003 - 2004
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     06 Apr 04  Now uses SWM::SyncSite not MyMods. 
+# SWM     10 Nov 03  Wrote this
+#------------------------------------------------------------------------------
+
+=head1 NAME
+
+backup_site - backup a site 
+
+=head1 SYNOPSIS
+
+ /usr/local/bin/backup_site --site=$site
+
+=head1 DESCRIPTION
+
+This script simply backups a site that lives on a swmcc.com webserver.
+It backups the directories given to it using SWM::SyncSite, so if
+the directory isn't in there this script wont archive it.
+
+The backups live in /var/backups/ with the directory being the sitename.   
+
+The script takes a site from the command line. This has to be a site that 
+the SWM::SyncSite deems valid, or you can pass in all, which backups
+everything.
+ 
+=head1 BUGS
+
+None Known.
+
+=head1 TODO
+
+Nothing Known.
+
+=cut
+
+#------------------------------------------------------------------------------
+use strict;
+use warnings;
+use Getopt::Long;
+use SWM::SyncSite;
+
+my $site;
+GetOptions( 'site=s' => \$site );
+
+my $USAGE = qq{
+  [backup_site]
+
+  backup_site --site=listings
+
+};
+
+
+if ( not defined $site ) { die "No path passed in\n $USAGE"; exit }
+
+my @sync_objs;
+if ( $site eq "all" ) {
+    @sync_objs = SWM::SyncSite->all_sites;
+}
+else {
+    @sync_objs = SWM::SyncSite->for_sitename($site);
+}
+
+die "Erk :( Nothing to backuo" unless ( scalar @sync_objs > 0 );
+
+foreach my $sync (@sync_objs) {
+  my $ARCHIVE_PATH = sprintf("/var/backups/%s", $sync->site_name);
+  my $to_sync      = $sync->directory;
+  my $label        = $sync->label;
+ 
+  system("tar -cvvf $ARCHIVE_PATH/$label.tar $to_sync"); 
+}
+
