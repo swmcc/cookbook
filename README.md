@@ -30,6 +30,12 @@ Recipies for debian. As of October 2012 there is only one file in here. This is 
 
 Handy utility and reporting scripts that I have had over the years. I hardly ever use them anymore as actual tools have now replaced them than handcrafed scripts.
 
+****nix***
+
+*/"It's a UNIX system, I know this!"/* - if you are like Lex from Jurrasic Park then
+you'll be able to find your way around in there. Just watch out for the rapotors behind
+you - those smart motherfuckers know how to open doors and shit!
+
 ***food***
 
 Am tired of actually having to google search for my favourite recipies and this is a cook book, so you know.. fuck it :)

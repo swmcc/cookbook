@@ -1,0 +1,50 @@
+#!/bin/sh
+#
+# There is probably a nicer way to write such a script but this 
+# works for me.
+# 
+# APP = nice generic system name for logfiles etc
+# NAME = nice generic application system wide known name
+# WHEREVER = where the script lives
+#
+# TODO: Make reload and force-reload do more than just emulate a start/stop
+
+start () {
+    nice /WHEREVER >>/var/log/APP.log 2>&1 &
+}
+
+stop () {
+    killall 
+}
+
+case "$1" in
+  start)
+    echo -n "Starting NAME api (APP): "
+    start
+    echo "Done"
+    echo "Started NAME " `date` >> /var/log/APP.log
+    ;;
+  stop)
+    echo -n "Stopping NAME api (APP): "
+    stop
+    echo "Done"
+    echo "Stopping NAME " `date` >> /var/log/APP.log
+    ;;
+  restart)
+    echo -n "Restarting NAME (APP): "
+    stop
+    start
+    echo "Done"
+    echo "Restarting NAME " `date` >> /var/log/APP.log
+    ;;
+  reload|force-reload)
+    echo -n "Reloading NAME (APP): "
+    stop
+    start
+    echo "Done"
+    echo "Reloading NAME " `date` >> /var/log/APP.log
+    ;;
+  *)
+    echo "Usage /etc/init.d/APP {start|stop|reload|force-reload|restart}"
+    exit 1
+esac
