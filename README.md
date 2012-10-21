@@ -8,7 +8,7 @@ A book containing recipes and other information about the preparation and cookin
 *Synonyms:*	
 cookery book
 
-![Cook Everything](http://cl.ly/image/18400p063229 "Cook Everything")
+![Cook Everything](http://f.cl.ly/items/1t2D3K1D46273J1u3s0h/baby-in-pot.jpg "Cook Everything")
 
 ****************************************
 
