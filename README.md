@@ -8,7 +8,7 @@ A book containing recipes and other information about the preparation and cookin
 *Synonyms:*	
 cookery book
 
-![Cook Everything](http://www.yourfunnystuff.com/wp-content/uploads/2009/04/how-to-cook-everything.jpg "Cook Everything")
+![Cook Everything](http://cl.ly/image/18400p063229 "Cook Everything")
 
 ****************************************
 
