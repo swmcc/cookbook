@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+#------------------------------------------------------------------------------
+#
+# Copyright  (c) swmcc  2012
+#
+#------------------------------------------------------------------------------
+#
+# Modification History
+#
+# Auth    Date       Description
+# ------  ---------  ----------------------------------------------------------
+# SWM     24 Mar 12  Wrote this
+#------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------
+# My first Thor script - just shoving on github to see the evolution of 
+# this file and how I use Thor generally. Should be interesting.
+# 
+# And yes, I am moving my blog to be jekyll very soon ;)
+#
+# TODO: Make this much much better. Use proper documentation
+#------------------------------------------------------------------------------
+
+require "fileutils"
+
+class Blog < Thor
+  TEMPLATE = (<<-TEXT).gsub(/^ +/, '')
+    ---
+    type: post
+    tags: []
+    published: true
+    title: TITLE
+    layout: publish
+    ---
+
+    POST CONTENT HERE
+  TEXT
+
+  desc "new", "Create a new blog post and open in sublime"
+  def new(title=nil)
+    abort("usage: thor blog:new 'Post Title'") if title.nil?
+
+    post = TEMPLATE.sub('TITLE', title)
+    date = Time.now.strftime('%Y-%m-%d')
+    
+    if !(File.directory?('_posts') ) then
+         FileUtils.mkdir( '_posts')
+    end
+
+    file = "_posts/#{date}-#{title.downcase.gsub(/[!.,;:+=-]/, '').gsub(/\W+/, '-')}.html"
+    File.open(file, 'wb') { |f| f.write(post) }
+    system("subl #{file}");
+  end
+end
