@@ -21,4 +21,5 @@ Fry 2 cloves of garlic and 1 teaspoon of chill flakes in olive oil. Add the cook
 
 Blend with a hand blender, season with ground black pepper, and serve with a swirl of natural yoghurt or cream.
 
+Take the peelings - cover them in some oil, put in some sea salt and thyme and shove them in the oven for 10mins to make lovely crisps
 YUM TIME
