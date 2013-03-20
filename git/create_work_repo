@@ -1,0 +1,13 @@
+#!/bin/sh -f
+
+git config --global user.name "Stephen McCullough"
+git config --global user.email "stephen.mccullough@repknight.com"
+
+mkdir $1
+cd $1
+git init
+touch README.md
+git add README.md
+git commit -m 'Skeleton Create (from script)'
+git remote add origin git@vcs.repknight.com:$1.git
+git push -u origin master
