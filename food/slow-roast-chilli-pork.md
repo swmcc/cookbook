@@ -13,7 +13,7 @@
 	
 ## Directions
 
-Im a bowl combine all the price ingredients with a bit of olive oil. Rub this spice mix all over the joint.
+In a bowl combine all the price ingredients with a bit of olive oil. Rub this spice mix all over the joint.
 
 On high for one hour on the slow cooker. 
 
