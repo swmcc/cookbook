@@ -36,9 +36,3 @@ Handy utility and reporting scripts that I have had over the years. I hardly eve
 you'll be able to find your way around in there. Just watch out for the rapotors behind
 you - those smart motherfuckers know how to open doors and shit!
 
-***food***
-
-Am tired of actually having to google search for my favourite recipies and this is a cook book, so you know.. fuck it :)
-
-
-Much love @swmcc
