@@ -1,0 +1,18 @@
+#!/bin/sh -f
+
+# Quick shell script that moves me to github creds
+github
+
+mkdir $1
+cd $1
+git init
+
+GISTDIR="/tmp/$$"
+git clone https://gist.github.com/5669227.git $GISTDIR 
+mv $GISTDIR/README.md .
+git add README.md 
+rm -fr $GISTDIR
+
+git commit -m 'Skeleton Create (from script)'
+git remote add origin https://github.com/swmcc/$1.git
+git push -u origin master
