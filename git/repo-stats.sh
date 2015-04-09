@@ -2,6 +2,8 @@
 
 set -e 
 
+pattern=$1
+
 function main {
      for rev in `get_revisions`; do
           echo "`number_of_lines` `commit_information`"
@@ -18,6 +20,7 @@ function commit_information {
 
 function number_of_lines {
           git ls-tree -r $rev | 
+          grep "$pattern" |
           awk '{print $3}' | 
           xargs git show | 
           wc -l 
