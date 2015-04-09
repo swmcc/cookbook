@@ -19,11 +19,11 @@ function commit_information {
 }
 
 function number_of_lines {
-          git ls-tree -r $rev | 
-          grep "$pattern" |
-          awk '{print $3}' | 
-          xargs git show | 
-          wc -l 
+     git ls-tree -r $rev | 
+     grep "$pattern" |
+     awk '{print $3}' | 
+     xargs git show | 
+     wc -l 
 }
 
 main
