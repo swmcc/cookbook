@@ -1,4 +1,0 @@
-#!/bin/sh -f
-
-git config --global user.name "Stephen McCullough"
-git config --global user.email "stephen.mccullough@repknight.com"
