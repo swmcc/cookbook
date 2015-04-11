@@ -34,7 +34,7 @@ function get_revisions {
 }
 
 function commit_information {
-     git log --oneline -1 $rev;
+     git log --oneline -1 $rev
 }
 
 function number_of_lines {
