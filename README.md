@@ -8,31 +8,37 @@ A book containing recipes and other information about the preparation and cookin
 *Synonyms:*	
 cookery book
 
-![Cook Everything](http://f.cl.ly/items/1t2D3K1D46273J1u3s0h/baby-in-pot.jpg "Cook Everything")
+![Cook Everything](assets/cookbook.png)
 
-****************************************
+This is a collection of handy code snippets that can be used in various
+projects. Each snippet is self-contained and can be easily integrated into a 
+codebase. This cookbook is designed to save time and effort by providing
+pre-written code that can be easily copied and pasted into any project.
 
-I don't know about you but I have a shit load of scripts that I have that just lie about in various states in various severs that do various things. When it comes to finding them to help me with a task it takes ages to find them or even remember I had them. So without further fanfare I introduce the '@swmcc cookbook'.
+## Developer Information
 
-The repo is laid out in my usual disorderd fashion but as per usual it makes sense to me. It will be language/app specific by directory/folder. 
+```bash
+git clone https://github.com/swmcc/cookbook.git
+```
 
-****************************************
+Alternatively, you can download the repository as a ZIP file and extract it to
+your local machine.
 
-***chef***
+## Usage
 
-Recipies for chef. As of October 2012 I am learning how to use chef. I will add more to here as time goes on.
+The code snippets in this cookbook are organised into categories based on their
+functionality or programming language. To find a snippet that suits your needs,
+browse through the categories and select the one that matches your use case.
+Most filenames are self explanatory but more complex recipies will contain a 
+README file that explains how to use the code snippets.
 
-***debian***
+## Contributions
 
-Recipies for debian. As of October 2012 there is only one file in here. This is an old file from the web1.0 that created a .deb file of an application for distribution from a suite of servers.
+Contributions are welcome! If you have a useful code snippet that you would
+like to add to this cookbook, please follow these steps:
 
-***perl***
-
-Handy utility and reporting scripts that I have had over the years. I hardly ever use them anymore as actual tools have now replaced them than handcrafed scripts.
-
-****nix***
-
-*/"It's a UNIX system, I know this!"/* - if you are like Lex from Jurrasic Park then
-you'll be able to find your way around in there. Just watch out for the rapotors behind
-you - those smart motherfuckers know how to open doors and shit!
-
+- Fork this repository.
+- Create a new branch with a descriptive name `feature/new-snippet`.
+- Add your code snippet to the appropriate category or create one , along with 
+a README file explaining how to use it (if needed).
+- Submit a pull request.
